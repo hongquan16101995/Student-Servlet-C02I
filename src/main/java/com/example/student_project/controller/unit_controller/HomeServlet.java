@@ -1,11 +1,13 @@
-package com.example.student_project;
+package com.example.student_project.controller.unit_controller;
+
+import com.example.student_project.service.StudentManage;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet(name = "HomeServlet", value = "/")
+@WebServlet(name = "HomeServlet", value = "/students1")
 public class HomeServlet extends HttpServlet {
 
     private final StudentManage studentManage = StudentManage.getInstance();

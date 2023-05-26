@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: ADMIN
-  Date: 05/25/2023
-  Time: 2:36 PM
+  Date: 05/26/2023
+  Time: 1:40 PM
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -17,37 +17,31 @@
 </head>
 <body>
 <div class="container">
-    <h1 style="text-align: center">Form create student</h1>
-    <form style="width: 600px; margin: auto" action="/students?action=create" method="post">
-        <div class="mb-3">
-            <label for="id" class="form-label">Id</label>
-            <input type="text" class="form-control" name="id" id="id" placeholder="Enter id">
-        </div>
+    <h1 style="text-align: center">Form update student</h1>
+    <form style="width: 600px; margin: auto"
+          action="/students?action=update&&id=${student.id}" method="post">
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" name="name" id="name" placeholder="Enter name">
+            <input type="text" class="form-control" id="name" name="name"
+                   placeholder="Enter name" value="${student.name}">
         </div>
         <div class="mb-3">
             <label for="age" class="form-label">Age</label>
-            <input type="text" class="form-control" name="age" id="age" placeholder="Enter age">
+            <input type="text" class="form-control" id="age" name="age"
+                   placeholder="Enter age" value="${student.age}">
         </div>
         <div class="mb-3">
             <label for="gender" class="form-label">Gender</label>
-            <select class="form-select" id="gender" name="gender"
-                    aria-label="Default select example">
-                <option selected>Open this select menu</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-            </select>
-            <%--            <input type="text" class="form-control" name="gender"  id="gender" placeholder="Enter gender">--%>
+            <input type="text" class="form-control" id="gender" name="gender"
+                   placeholder="Enter gender" value="${student.gender}">
         </div>
         <div class="mb-3">
             <label for="address" class="form-label">Address</label>
-            <input type="text" class="form-control" name="address" id="address" placeholder="Enter address">
+            <input type="text" class="form-control" id="address" name="address"
+                   placeholder="Enter address" value="${student.address}">
         </div>
         <div class="mb-3">
-            <button class="btn btn-primary" type="submit">Create</button>
+            <button class="btn btn-primary" type="submit">Update</button>
             <a class="btn btn-secondary" href="/students">Back to home</a>
         </div>
     </form>

@@ -1,4 +1,4 @@
-package com.example.student_project;
+package com.example.student_project.model;
 
 public class Student {
     private Long id;
