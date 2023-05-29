@@ -1,7 +1,9 @@
 package com.example.student_project.controller;
 
+import com.example.student_project.model.Classes;
 import com.example.student_project.model.Student;
-import com.example.student_project.service.StudentManage;
+import com.example.student_project.service.ClassesService;
+import com.example.student_project.service.StudentService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -13,7 +15,8 @@ import java.util.List;
 @WebServlet(name = "StudentServlet", urlPatterns = "/students")
 public class StudentServlet extends HttpServlet {
 
-    private final StudentManage studentManage = StudentManage.getInstance();
+    private final StudentService studentService = StudentService.getInstance();
+    private final ClassesService classesService = ClassesService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,13 +59,15 @@ public class StudentServlet extends HttpServlet {
     }
 
     private void findAdd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("students", studentManage.getStudents());
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
+        request.setAttribute("students", studentService.getStudents());
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/student/home.jsp");
         requestDispatcher.forward(request, response);
     }
 
     private void createGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect("create.jsp");
+        request.setAttribute("classes", classesService.getClasses());
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/student/create.jsp");
+        requestDispatcher.forward(request, response);
     }
 
     private void createPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -71,19 +76,25 @@ public class StudentServlet extends HttpServlet {
         int age = Integer.parseInt(request.getParameter("age"));
         String gender = request.getParameter("gender");
         String address = request.getParameter("address");
+        Long classId = Long.parseLong(request.getParameter("classes"));
 
-        Student student = new Student(id, name, age, gender, address);
-        studentManage.addStudent(student);
-
-        response.sendRedirect("/students");
+        Classes classes = classesService.getById(classId);
+        if (classes != null) {
+            Student student = new Student(id, name, age, gender, address, classes);
+            studentService.addStudent(student);
+            response.sendRedirect("/students");
+        } else {
+            response.sendRedirect("/404.jsp");
+        }
     }
 
     private void updateGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("id"));
-        Student student = studentManage.getById(id);
+        Student student = studentService.getById(id);
         if (student != null) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("update.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/student/update.jsp");
             request.setAttribute("student", student);
+            request.setAttribute("classes", classesService.getClasses());
             requestDispatcher.forward(request, response);
         } else {
             response.sendRedirect("/404.jsp");
@@ -96,13 +107,17 @@ public class StudentServlet extends HttpServlet {
         int age = Integer.parseInt(request.getParameter("age"));
         String gender = request.getParameter("gender");
         String address = request.getParameter("address");
+        Long classId = Long.parseLong(request.getParameter("classes"));
 
-        Student student = studentManage.getById(id);
-        if (student != null) {
+        Classes classes = classesService.getById(classId);
+        Student student = studentService.getById(id);
+
+        if (student != null && classes != null) {
             student.setName(name);
             student.setAge(age);
             student.setGender(gender);
             student.setAddress(address);
+            student.setClasses(classes);
             response.sendRedirect("/students");
         } else {
             response.sendRedirect("/404.jsp");
@@ -111,15 +126,15 @@ public class StudentServlet extends HttpServlet {
 
     private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("id"));
-        studentManage.deleteById(id);
+        studentService.deleteById(id);
         response.sendRedirect("/students");
     }
 
     private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String search = request.getParameter("search");
-        List<Student> students = studentManage.searchByName(search);
+        List<Student> students = studentService.searchByName(search);
         request.setAttribute("students", students);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/student/home.jsp");
         requestDispatcher.forward(request, response);
     }
 }

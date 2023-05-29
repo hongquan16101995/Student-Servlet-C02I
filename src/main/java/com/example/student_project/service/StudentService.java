@@ -1,26 +1,24 @@
 package com.example.student_project.service;
 
+import com.example.student_project.model.Classes;
 import com.example.student_project.model.Student;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentManage {
+public class StudentService {
     private final List<Student> students;
-    private static StudentManage studentManage;
+    private static StudentService studentService;
 
-    private StudentManage() {
+    private StudentService() {
         students = new ArrayList<>();
-        students.add(new Student(1L,"Duong", 20, "Male", "HN"));
-        students.add(new Student(2L,"Dung", 21, "Male", "HN"));
-        students.add(new Student(3L,"Thai", 22, "Male", "HN"));
     }
 
-    public static StudentManage getInstance() {
-        if (studentManage == null) {
-            studentManage = new StudentManage();
+    public static StudentService getInstance() {
+        if (studentService == null) {
+            studentService = new StudentService();
         }
-        return studentManage;
+        return studentService;
     }
 
     public List<Student> getStudents() {
@@ -45,6 +43,16 @@ public class StudentManage {
         if (student != null) {
             students.remove(student);
         }
+    }
+
+    public void deleteByClasses(Classes classes) {
+        List<Student> studentDelete = new ArrayList<>();
+        for (Student student : students) {
+            if (student.getClasses().equals(classes)) {
+                studentDelete.add(student);
+            }
+        }
+        students.removeAll(studentDelete);
     }
 
     public List<Student> searchByName(String name) {

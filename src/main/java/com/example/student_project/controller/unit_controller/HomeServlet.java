@@ -1,6 +1,6 @@
 package com.example.student_project.controller.unit_controller;
 
-import com.example.student_project.service.StudentManage;
+import com.example.student_project.service.StudentService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -10,11 +10,11 @@ import java.io.IOException;
 @WebServlet(name = "HomeServlet", value = "/students1")
 public class HomeServlet extends HttpServlet {
 
-    private final StudentManage studentManage = StudentManage.getInstance();
+    private final StudentService studentService = StudentService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("students", studentManage.getStudents());
+        request.setAttribute("students", studentService.getStudents());
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("home.jsp");
         requestDispatcher.forward(request, response);
     }

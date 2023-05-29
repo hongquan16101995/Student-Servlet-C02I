@@ -1,6 +1,6 @@
 package com.example.student_project.controller.unit_controller;
 
-import com.example.student_project.service.StudentManage;
+import com.example.student_project.service.StudentService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -11,12 +11,12 @@ import java.io.IOException;
 @WebServlet(name = "DeleteServlet", value = "/students/delete")
 public class DeleteServlet extends HttpServlet {
 
-    private final StudentManage studentManage = StudentManage.getInstance();
+    private final StudentService studentService = StudentService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("id"));
-        studentManage.deleteById(id);
+        studentService.deleteById(id);
         response.sendRedirect("/students");
     }
 

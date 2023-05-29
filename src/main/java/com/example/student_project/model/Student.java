@@ -6,6 +6,16 @@ public class Student {
     private int age;
     private String gender;
     private String address;
+    private Classes classes;
+
+    public Student(Long id, String name, int age, String gender, String address, Classes classes) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.address = address;
+        this.classes = classes;
+    }
 
     public Student(Long id, String name, int age, String gender, String address) {
         this.id = id;
@@ -53,5 +63,13 @@ public class Student {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Classes getClasses() {
+        return classes;
+    }
+
+    public void setClasses(Classes classes) {
+        this.classes = classes;
     }
 }

@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: ADMIN
@@ -40,11 +41,20 @@
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
             </select>
-            <%--            <input type="text" class="form-control" name="gender"  id="gender" placeholder="Enter gender">--%>
         </div>
         <div class="mb-3">
             <label for="address" class="form-label">Address</label>
             <input type="text" class="form-control" name="address" id="address" placeholder="Enter address">
+        </div>
+        <div class="mb-3">
+            <label for="classes" class="form-label">Classes</label>
+            <select class="form-select" id="classes" name="classes"
+                    aria-label="Default select example">
+                <option selected>--- Choice classes ---</option>
+                <c:forEach items="${classes}" var="c">
+                    <option value="${c.id}">${c.name}</option>
+                </c:forEach>
+            </select>
         </div>
         <div class="mb-3">
             <button class="btn btn-primary" type="submit">Create</button>

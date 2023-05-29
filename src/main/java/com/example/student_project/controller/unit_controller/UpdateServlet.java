@@ -1,7 +1,7 @@
 package com.example.student_project.controller.unit_controller;
 
 import com.example.student_project.model.Student;
-import com.example.student_project.service.StudentManage;
+import com.example.student_project.service.StudentService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -12,12 +12,12 @@ import java.io.IOException;
 @WebServlet(name = "UpdateServlet", value = "/students/update")
 public class UpdateServlet extends HttpServlet {
 
-    private final StudentManage studentManage = StudentManage.getInstance();
+    private final StudentService studentService = StudentService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long id = Long.parseLong(request.getParameter("id"));
-        Student student = studentManage.getById(id);
+        Student student = studentService.getById(id);
         if (student != null) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("update.jsp");
             request.setAttribute("student", student);
@@ -35,7 +35,7 @@ public class UpdateServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String address = request.getParameter("address");
 
-        Student student = studentManage.getById(id);
+        Student student = studentService.getById(id);
         if (student != null) {
             student.setName(name);
             student.setAge(age);
