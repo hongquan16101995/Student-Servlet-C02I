@@ -55,7 +55,7 @@ public class ClassesServlet extends HttpServlet {
 
     private void findAdd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/classes/home.jsp");
-        request.setAttribute("classes", classesService.getClasses());
+        request.setAttribute("classes", classesService.findAll());
         requestDispatcher.forward(request, response);
     }
 
@@ -64,22 +64,15 @@ public class ClassesServlet extends HttpServlet {
     }
 
     private void createPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Long id = Long.parseLong(request.getParameter("id"));
-        String name = request.getParameter("name");
-
-        Classes classes = new Classes(id, name);
-        classesService.addClasses(classes);
+        classesService.addClasses(request);
         response.sendRedirect("/classes");
     }
 
     private void updateGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Long id = Long.parseLong(request.getParameter("id"));
-
-        Classes classes = classesService.getById(id);
-
-        if (classes != null) {
+        if (checkById(request)) {
+            Long id = Long.parseLong(request.getParameter("id"));
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("/classes/update.jsp");
-            request.setAttribute("classes", classes);
+            request.setAttribute("classes", classesService.getById(id));
             requestDispatcher.forward(request, response);
         } else {
             response.sendRedirect("/404.jsp");
@@ -87,13 +80,8 @@ public class ClassesServlet extends HttpServlet {
     }
 
     private void updatePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Long id = Long.parseLong(request.getParameter("id"));
-        String name = request.getParameter("name");
-
-        Classes classes = classesService.getById(id);
-
-        if (classes != null) {
-           classes.setName(name);
+        if (checkById(request)) {
+            classesService.updateClasses(request);
             response.sendRedirect("/classes");
         } else {
             response.sendRedirect("/404.jsp");
@@ -101,15 +89,18 @@ public class ClassesServlet extends HttpServlet {
     }
 
     private void delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Long id = Long.parseLong(request.getParameter("id"));
-
-        Classes classes = classesService.getById(id);
-        if (classes != null) {
+        if (checkById(request)) {
+            Long id = Long.parseLong(request.getParameter("id"));
             classesService.deleteById(id);
-            studentService.deleteByClasses(classes);
             response.sendRedirect("/classes");
         } else {
             response.sendRedirect("/404.jsp");
         }
+    }
+
+    private boolean checkById(HttpServletRequest request) {
+        Long id = Long.parseLong(request.getParameter("id"));
+        Classes classes = classesService.getById(id);
+        return classes != null;
     }
 }

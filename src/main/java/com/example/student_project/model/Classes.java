@@ -9,6 +9,10 @@ public class Classes {
         this.name = name;
     }
 
+    public Classes(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

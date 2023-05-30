@@ -1,19 +1,18 @@
 package com.example.student_project.service;
 
+import com.example.student_project.DAO.ClassesDAO;
 import com.example.student_project.model.Classes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClassesService {
-    private final List<Classes> classesList;
     private static ClassesService classesService;
+    private final ClassesDAO classesDAO;
 
     private ClassesService() {
-        classesList = new ArrayList<>();
-        classesList.add(new Classes(1L,"C0223I1"));
-        classesList.add(new Classes(2L,"C0223H1"));
-        classesList.add(new Classes(3L,"C0323G1"));
+        classesDAO = new ClassesDAO();
     }
 
     public static ClassesService getInstance() {
@@ -23,27 +22,26 @@ public class ClassesService {
         return classesService;
     }
 
-    public List<Classes> getClasses() {
-        return classesList;
+    public List<Classes> findAll() {
+        return classesDAO.findAll();
     }
 
-    public void addClasses(Classes classes) {
-        classesList.add(classes);
+    public void addClasses(HttpServletRequest request) {
+        String name = request.getParameter("name");
+        classesDAO.addClasses(new Classes(name));
+    }
+
+    public void updateClasses(HttpServletRequest request) {
+        Long id = Long.parseLong(request.getParameter("id"));
+        String name = request.getParameter("name");
+        classesDAO.updateClasses(new Classes(id, name));
     }
 
     public Classes getById(Long id) {
-        for (Classes classes : classesList) {
-            if (classes.getId().equals(id)) {
-                return classes;
-            }
-        }
-        return null;
+        return classesDAO.findById(id);
     }
 
     public void deleteById(Long id) {
-        Classes classes = getById(id);
-        if (classes != null) {
-            classesList.remove(classes);
-        }
+        classesDAO.deleteById(id);
     }
 }
