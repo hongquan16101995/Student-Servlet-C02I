@@ -1,8 +1,6 @@
 package com.example.student_project.controller;
 
-import com.example.student_project.model.Classes;
 import com.example.student_project.service.ClassesService;
-import com.example.student_project.service.StudentService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -14,7 +12,6 @@ import java.io.IOException;
 public class ClassesServlet extends HttpServlet {
 
     private final ClassesService classesService = ClassesService.getInstance();
-    private final StudentService studentService = StudentService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,7 +35,7 @@ public class ClassesServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
@@ -64,13 +61,13 @@ public class ClassesServlet extends HttpServlet {
     }
 
     private void createPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        classesService.addClasses(request);
+        classesService.save(request);
         response.sendRedirect("/classes");
     }
 
     private void updateGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (checkById(request)) {
-            Long id = Long.parseLong(request.getParameter("id"));
+        Long id = Long.parseLong(request.getParameter("id"));
+        if (classesService.checkById(id)) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("/classes/update.jsp");
             request.setAttribute("classes", classesService.getById(id));
             requestDispatcher.forward(request, response);
@@ -80,8 +77,9 @@ public class ClassesServlet extends HttpServlet {
     }
 
     private void updatePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (checkById(request)) {
-            classesService.updateClasses(request);
+        Long id = Long.parseLong(request.getParameter("id"));
+        if (classesService.checkById(id)) {
+            classesService.save(request);
             response.sendRedirect("/classes");
         } else {
             response.sendRedirect("/404.jsp");
@@ -89,18 +87,12 @@ public class ClassesServlet extends HttpServlet {
     }
 
     private void delete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (checkById(request)) {
-            Long id = Long.parseLong(request.getParameter("id"));
+        Long id = Long.parseLong(request.getParameter("id"));
+        if (classesService.checkById(id)) {
             classesService.deleteById(id);
             response.sendRedirect("/classes");
         } else {
             response.sendRedirect("/404.jsp");
         }
-    }
-
-    private boolean checkById(HttpServletRequest request) {
-        Long id = Long.parseLong(request.getParameter("id"));
-        Classes classes = classesService.getById(id);
-        return classes != null;
     }
 }

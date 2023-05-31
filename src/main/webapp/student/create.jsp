@@ -21,10 +21,6 @@
     <h1 style="text-align: center">Form create student</h1>
     <form style="width: 600px; margin: auto" action="/students?action=create" method="post">
         <div class="mb-3">
-            <label for="id" class="form-label">Id</label>
-            <input type="text" class="form-control" name="id" id="id" placeholder="Enter id">
-        </div>
-        <div class="mb-3">
             <label for="name" class="form-label">Name</label>
             <input type="text" class="form-control" name="name" id="name" placeholder="Enter name">
         </div>

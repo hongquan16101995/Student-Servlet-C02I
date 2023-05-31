@@ -1,17 +1,21 @@
 package com.example.student_project.service;
 
+import com.example.student_project.DAO.StudentDAO;
 import com.example.student_project.model.Classes;
 import com.example.student_project.model.Student;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public class StudentService {
-    private final List<Student> students;
+
+    private final StudentDAO studentDAO;
+    private final ClassesService classesService;
     private static StudentService studentService;
 
     private StudentService() {
-        students = new ArrayList<>();
+        studentDAO = new StudentDAO();
+        classesService = ClassesService.getInstance();
     }
 
     public static StudentService getInstance() {
@@ -22,46 +26,41 @@ public class StudentService {
     }
 
     public List<Student> getStudents() {
-        return students;
+        return studentDAO.findAll();
     }
 
-    public void addStudent(Student student) {
-        students.add(student);
+    public void save(HttpServletRequest request) {
+        String id = request.getParameter("id");
+        String name = request.getParameter("name");
+        int age = Integer.parseInt(request.getParameter("age"));
+        String gender = request.getParameter("gender");
+        String address = request.getParameter("address");
+        Long classId = Long.parseLong(request.getParameter("classes"));
+        Classes classes = classesService.getById(classId);
+        if (id != null) {
+            Long idUpdate = Long.parseLong(id);
+            studentDAO.updateStudent(new Student(idUpdate, name, age, gender, address, classes));
+        } else {
+            studentDAO.addStudent(new Student(name, age, gender, address, classes));
+        }
     }
 
     public Student getById(Long id) {
-        for (Student student : students) {
-            if (student.getId().equals(id)) {
-                return student;
-            }
-        }
-        return null;
+        return studentDAO.findById(id);
     }
 
-    public void deleteById(Long id) {
-        Student student = getById(id);
-        if (student != null) {
-            students.remove(student);
-        }
+    public void deleteById(HttpServletRequest request) {
+        Long id = Long.parseLong(request.getParameter("id"));
+        studentDAO.deleteById(id);
     }
 
-    public void deleteByClasses(Classes classes) {
-        List<Student> studentDelete = new ArrayList<>();
-        for (Student student : students) {
-            if (student.getClasses().equals(classes)) {
-                studentDelete.add(student);
-            }
-        }
-        students.removeAll(studentDelete);
+    public List<Student> searchByName(HttpServletRequest request) {
+        String search = request.getParameter("search");
+        return studentDAO.searchByName(search);
     }
 
-    public List<Student> searchByName(String name) {
-        List<Student> studentsSearch = new ArrayList<>();
-        for (Student student : students) {
-            if (student.getName().contains(name)) {
-                studentsSearch.add(student);
-            }
-        }
-        return studentsSearch;
+    public boolean checkById(Long id) {
+        Student student = studentDAO.findById(id);
+        return student != null;
     }
 }

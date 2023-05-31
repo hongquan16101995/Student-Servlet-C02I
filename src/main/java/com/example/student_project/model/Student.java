@@ -17,12 +17,12 @@ public class Student {
         this.classes = classes;
     }
 
-    public Student(Long id, String name, int age, String gender, String address) {
-        this.id = id;
+    public Student(String name, int age, String gender, String address, Classes classes) {
         this.name = name;
         this.age = age;
         this.gender = gender;
         this.address = address;
+        this.classes = classes;
     }
 
     public Long getId() {
